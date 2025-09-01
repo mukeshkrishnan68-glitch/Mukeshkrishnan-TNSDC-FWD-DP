@@ -1,0 +1,92 @@
+// Typing effect
+const text = ["BCA Student", "Web Developer", "Tech Enthusiast", "Runner"];
+let index=0, charIndex=0;
+
+function typeEffect(){
+  if(charIndex < text[index].length){
+    document.getElementById("typing").innerHTML += text[index].charAt(charIndex);
+    charIndex++;
+    setTimeout(typeEffect, 100);
+  } else {
+    setTimeout(eraseEffect, 1500);
+  }
+}
+
+function eraseEffect(){
+  if(charIndex > 0){
+    document.getElementById("typing").innerHTML = text[index].substring(0,charIndex-1);
+    charIndex--;
+    setTimeout(eraseEffect, 50);
+  } else {
+    index = (index+1)%text.length;
+    setTimeout(typeEffect, 200);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", typeEffect);
+
+// Modal for certificates
+function openModal(title){
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalImage = document.getElementById("modal-image");
+  const modalDescription = document.getElementById("modal-description");
+
+  modal.style.display = "flex";
+  modalTitle.innerText = title;
+
+  const certs = {
+    "Python Certificate": {
+      img: "certificates/python.png",
+      desc: "Certified in Python basics with hands-on projects."
+    },
+    "Web Development Certificate": {
+      img: "certificates/webdev.png",
+      desc: "Completed a full-stack web development course."
+    },
+    "Running Achievement": {
+      img: "certificates/run.png",
+      desc: "Participated in multiple running events and achieved top positions."
+    }
+  };
+
+  if (certs[title]) {
+    modalImage.src = certs[title].img;
+    modalDescription.innerText = certs[title].desc;
+  } else {
+    modalImage.src = "";
+    modalDescription.innerText = "Details coming soon!";
+  }
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+// Close modal on outside click
+window.addEventListener("click", function(e) {
+  if (e.target.id === "modal") {
+    closeModal();
+  }
+});
+
+// Profile Photo Upload
+document.getElementById("upload-photo").addEventListener("change", function(event){
+  const file = event.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      document.getElementById("profile-photo").src = e.target.result;
+      localStorage.setItem("profilePhoto", e.target.result);
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// Load saved photo if available
+window.addEventListener("load", function(){
+  const savedPhoto = localStorage.getItem("profilePhoto");
+  if(savedPhoto){
+    document.getElementById("profile-photo").src = savedPhoto;
+  }
+});
